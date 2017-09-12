@@ -1,0 +1,5 @@
+---
+bind_packages: bind9
+bind_defaults_path: /etc/default/bind9
+bind_rfc1918_path: /etc/bind/zones.rfc1918
+bind_service_name: bind9

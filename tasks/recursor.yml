@@ -1,0 +1,35 @@
+- include: main.yml
+
+- name: configure bind rfc-1918 zones
+  lineinfile:
+    path: "{{ bind_rfc1918_path }}"
+    regexp: "{{ item }}"
+    state: absent
+  with_items: "{{ bind_rev_zones }}"
+  notify: restart bind
+
+#- name: configure bind custom zones
+#  template:
+#    src: ../../templates/bind/recursor.conf.j2
+#    dest: /etc/bind/named.conf.local
+#  vars:
+#    fwd_zones: "{{ zones.fwd }}"
+#  notify: Restart bind
+#
+#- name: configure resolution
+#  include_role:
+#    name: ahuffman.resolv
+#  vars:
+#    resolv_nameservers:
+#      - 127.0.0.1
+#
+# - name: configure bind
+#   template:
+#     src: "{{ bind_conf_template }}"
+#     dest: "{{ bind_conf_path }}"
+#   become: no
+#   when: bind_conf_path is defined
+#   tags:
+#     - "bind"
+#   notify:
+#     - restart bind

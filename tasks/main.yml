@@ -1,0 +1,50 @@
+---
+- name: include variable overrides
+  include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "vars/{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+        - "vars/{{ ansible_distribution }}.yml"
+        - "vars/{{ ansible_os_family }}.yml"
+      skip: true
+  tags:
+    - bind
+
+- name: inspect nameservers
+  changed_when: False
+  command: "host -W 1 www.google.com"
+  ignore_errors: true
+  register: resolv
+
+- name: configure resolution
+  include_role:
+    name: ahuffman.resolv
+  vars:
+    resolv_nameservers:
+      - 8.8.8.8
+      - 8.8.4.4
+  when: resolv.rc != 0
+
+- name: install bind packages
+  package:
+    name: "{{ item }}"
+    state: "{{ bind_packages_state }}"
+  become: "yes"
+  with_items: "{{ bind_packages }}"
+
+- name: disable ipv6 resolution
+  lineinfile:
+    regexp: '^OPTIONS='
+    line: "OPTIONS=\"{{ bind_options }}\""
+    dest: "{{ bind_defaults_path }}"
+    insertafter: EOF
+  when: ansible_os_family != 'Archlinux'
+  notify: restart bind
+
+- name: manage bind services
+  service:
+    name: "{{ bind_service_name }}"
+    state: "{{ bind_service_status }}"
+  become: "yes"
+  tags:
+    - bind
