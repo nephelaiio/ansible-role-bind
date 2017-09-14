@@ -1,12 +1,8 @@
 ---
-bind_packages: bind-chroot
 bind_packages_state: present
 bind_conf_template: named.conf
-bind_conf_path: /etc/bind/bind.conf
-bind_defaults_path: /etc/sysconfig/named
-bind_rfc1918_path: /etc/named.rfc1912.zones 
-bind_options: -u bind -4
-bind_service_name: named-chroot
 bind_service_status: started
-bind_fwd_zones: []
-bind_rev_zones: []
+bind_service_enabled: true
+bind_conf_options:
+bind_conf_local:
+bind_conf_global:

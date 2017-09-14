@@ -1,1 +1,15 @@
 ---
+bind_conf_daemon_path:
+bind_conf_global_path: /etc/named.conf
+bind_conf_options_path:
+bind_conf_local_path:
+bind_conf_rfc1918_path:
+
+bind_options_path:
+bind_conf_path: /etc/bind/bind.conf
+bind_defaults_path:
+bind_conf_hints_path: root.hint
+
+bind_packages: bind
+bind_service_name: named
+bind_options:

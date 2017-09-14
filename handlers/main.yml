@@ -1,6 +1,6 @@
 ---
 - name: restart bind
+  become: yes
   service:
     name: "{{ bind_service_name }}"
     state: restarted
-  become: "yes"

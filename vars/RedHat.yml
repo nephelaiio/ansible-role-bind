@@ -1,1 +1,43 @@
 ---
+bind_conf_daemon_path: /etc/sysconfig/named
+bind_conf_global_path: /etc/named.conf
+bind_conf_options_path: /etc/named.conf.options
+bind_conf_local_path: /etc/named.conf.local
+
+bind_packages: bind
+bind_service_name: named
+bind_options:
+bind_conf_options:
+  options:
+    listen-on:
+      - 127.0.0.1
+      - '{{ ansible_default_ipv4.address }}'
+    listen-on-v6:
+      - none
+    directory: '"/var/named"'
+    dump-file: '"/var/named/data/cache_dump.db"'
+    statistics-file: '"/var/named/data/named_stats.txt"'
+    memstatistics-file: '"/var/named/data/named_mem_stats.txt"'
+    allow-query:
+      - localhost
+      - localnets
+    recursion: 'yes'
+    dnssec-enable: 'no'
+    dnssec-validation: 'no'
+    bindkeys-file: '"/etc/named.iscdlv.key"'
+    managed-keys-directory: '"/var/named/dynamic"'
+    pid-file: '"/run/named/named.pid"'
+    session-keyfile: '"/run/named/session.key"'
+  logging:
+    channel default_debug:
+      file: '"data/named.run"'
+      severity: dynamic
+bind_conf_local:
+  zone . IN:
+    type: hint
+    file: '"named.ca"'
+bind_conf_global:
+  - 'include "{{ bind_conf_options_path }}"'
+  - 'include "{{ bind_conf_local_path }}"'
+  - 'include "/etc/named.rfc1912.zones"'
+  - 'include "/etc/named.root.key"'

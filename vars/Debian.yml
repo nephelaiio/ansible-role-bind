@@ -1,5 +1,11 @@
 ---
+bind_conf_daemon_path: /etc/default/bind9
+bind_conf_global_path: /etc/bind/named.conf
+bind_conf_options_path: /etc/bind/named.conf.options
+bind_conf_local_path: /etc/bind/named.conf.local
+bind_conf_rfc1918_path: /etc/bind/zones.rfc1918
+bind_conf_hints_path: /etc/bind/db.root
+
 bind_packages: bind9
-bind_defaults_path: /etc/default/bind9
-bind_rfc1918_path: /etc/bind/zones.rfc1918
 bind_service_name: bind9
+bind_options: "-u bind -4"

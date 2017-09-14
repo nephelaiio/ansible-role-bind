@@ -1,0 +1,8 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: Apply recursor playlist
+      include_role:
+        name: nephelaiio.bind
+        tasks_from: recursor.yml
