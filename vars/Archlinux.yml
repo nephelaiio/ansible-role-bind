@@ -1,15 +1,43 @@
 ---
 bind_conf_daemon_path:
 bind_conf_global_path: /etc/named.conf
-bind_conf_options_path:
-bind_conf_local_path:
-bind_conf_rfc1918_path:
-
-bind_options_path:
-bind_conf_path: /etc/bind/bind.conf
-bind_defaults_path:
-bind_conf_hints_path: root.hint
+bind_conf_options_path: /etc/named.conf.options
+bind_conf_local_path: /etc/named.conf.local
 
 bind_packages: bind
 bind_service_name: named
 bind_options:
+bind_conf_root: /var/named
+bind_conf_options:
+  options:
+    listen-on:
+      - 127.0.0.1
+      - '{{ ansible_default_ipv4.address }}'
+    listen-on-v6:
+      - none
+    directory: '"{{ bind_conf_root }}"'
+    pid-file: '"/run/named/named.pid"'
+    recursion: 'yes'
+    dnssec-enable: 'no'
+    dnssec-validation: 'no'
+    auth-nxdomain: 'no'
+bind_conf_global:
+  - 'include "{{ bind_conf_options_path }}"'
+  - 'zone "localhost" IN':
+      - type: master
+      - file: '"localhost.zone"'
+  - 'zone "0.0.127.in-addr.arpa" IN':
+      - type: master
+      - file: '"127.0.0.zone"'
+  - 'zone "1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa"':
+      - type: master
+      - file: '"localhost.ip6.zone"'
+  - 'zone "255.in-addr.arpa" IN':
+      - type: master
+      - file: '"empty.zone"'
+  - 'zone "0.in-addr.arpa" IN':
+      - type: master
+      - file: '"empty.zone"'
+  - 'zone "." IN':
+      - type: hint
+      - file: '"root.hint"'

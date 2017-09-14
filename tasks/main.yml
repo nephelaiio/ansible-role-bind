@@ -9,13 +9,14 @@
       skip: true
 
 - name: Install bind packages
+  become: yes
   package:
     name: "{{ item }}"
     state: "{{ bind_packages_state }}"
-  become: "yes"
   with_items: "{{ bind_packages }}"
 
 - name: configure daemon options
+  become: yes
   lineinfile:
     regexp: '^OPTIONS='
     line: "OPTIONS=\"{{ bind_options }}\""
@@ -26,9 +27,62 @@
     - bind_conf_daemon_path != ''
   notify: restart bind
 
+- name: detect configuration permissions
+  become: yes
+  stat:
+    path: "{{ bind_conf_global_path }}"
+  register: bind_permissions
+
+- name: initialize configuration files
+  become: yes
+  copy:
+    dest: "{{ item }}"
+    content: ''
+    force: no
+    owner: "{{ bind_permissions.stat.pw_name }}"
+    group: "{{ bind_permissions.stat.gr_name }}"
+  with_items:
+    - "{{ bind_conf_global_path }}"
+    - "{{ bind_conf_options_path }}"
+    - "{{ bind_conf_local_path }}"
+
+- name: manage global configuration file
+  template:
+    src: named.conf.j2
+    dest: "{{ bind_conf_global_path }}"
+    owner: "{{ bind_permissions.stat.pw_name }}"
+    group: "{{ bind_permissions.stat.gr_name }}"
+  vars:
+    conf: "{{ bind_conf_global | named_conf }}"
+  when:
+    - bind_conf_global is defined
+    - bind_conf_global != None
+  notify: restart bind
+
+- name: manage options configuration file
+  template:
+    src: named.conf.j2
+    dest: "{{ bind_conf_options_path }}"
+  vars:
+    conf: "{{ bind_conf_options | named_conf }}"
+  when:
+    - bind_conf_options is defined
+    - bind_conf_options != None
+  notify: restart bind
+
+- name: manage local configuration file
+  template:
+    src: named.conf.j2
+    dest: "{{ bind_conf_local_path }}"
+  vars:
+    conf: "{{ bind_conf_local | named_conf }}"
+  when:
+    - bind_conf_local is defined
+    - bind_conf_local != None
+  notify: restart bind
+
 - name: manage bind services
   become: yes
-  ignore_errors: yes
   service:
     name: "{{ bind_service_name }}"
     state: "{{ bind_service_status }}"

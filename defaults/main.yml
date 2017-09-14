@@ -5,4 +5,6 @@ bind_service_status: started
 bind_service_enabled: true
 bind_conf_options:
 bind_conf_local:
-bind_conf_global:
+bind_forwarders:
+  - 8.8.8.8
+  - 8.8.4.4

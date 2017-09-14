@@ -7,6 +7,7 @@ bind_conf_local_path: /etc/named.conf.local
 bind_packages: bind
 bind_service_name: named
 bind_options:
+bind_conf_root: /var/named
 bind_conf_options:
   options:
     listen-on:
@@ -14,7 +15,7 @@ bind_conf_options:
       - '{{ ansible_default_ipv4.address }}'
     listen-on-v6:
       - none
-    directory: '"/var/named"'
+    directory: '"{{ bind_conf_root }}"'
     dump-file: '"/var/named/data/cache_dump.db"'
     statistics-file: '"/var/named/data/named_stats.txt"'
     memstatistics-file: '"/var/named/data/named_mem_stats.txt"'
@@ -28,16 +29,16 @@ bind_conf_options:
     managed-keys-directory: '"/var/named/dynamic"'
     pid-file: '"/run/named/named.pid"'
     session-keyfile: '"/run/named/session.key"'
+    auth-nxdomain: 'no'
   logging:
     channel default_debug:
       file: '"data/named.run"'
       severity: dynamic
-bind_conf_local:
-  zone . IN:
-    type: hint
-    file: '"named.ca"'
 bind_conf_global:
   - 'include "{{ bind_conf_options_path }}"'
-  - 'include "{{ bind_conf_local_path }}"'
   - 'include "/etc/named.rfc1912.zones"'
+  - 'zone "." IN':
+      type: hint
+      file: '"named.ca"'
+  - 'include "{{ bind_conf_local_path }}"'
   - 'include "/etc/named.root.key"'

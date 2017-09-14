@@ -34,6 +34,8 @@ provisioner:
   name: ansible
   lint:
     name: ansible-lint
+  env:
+    ANSIBLE_FILTER_PLUGINS: filter_plugins
 scenario:
   name: default
 verifier:
