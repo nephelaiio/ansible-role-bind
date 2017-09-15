@@ -23,6 +23,7 @@ def test_with_key():
     assert with_key({'a': 'b'}, 'b') == {}
     assert with_key({'a': 'b', 'c': 'd'}, 'a') == {'a': 'b'}
 
+
 def test_without_key():
     assert without_key({}, 'a') == {}
     assert without_key({'a': 'b'}, 'a') == {}
