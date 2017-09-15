@@ -8,7 +8,7 @@
         - "vars/{{ ansible_os_family }}.yml"
       skip: true
 
-- name: Install bind packages
+- name: install bind packages
   become: yes
   package:
     name: "{{ item }}"
@@ -47,6 +47,7 @@
     - "{{ bind_conf_local_path }}"
 
 - name: manage global configuration file
+  become: yes
   template:
     src: named.conf.j2
     dest: "{{ bind_conf_global_path }}"
@@ -60,9 +61,12 @@
   notify: restart bind
 
 - name: manage options configuration file
+  become: yes
   template:
     src: named.conf.j2
     dest: "{{ bind_conf_options_path }}"
+    owner: "{{ bind_permissions.stat.pw_name }}"
+    group: "{{ bind_permissions.stat.gr_name }}"
   vars:
     conf: "{{ bind_conf_options | named_conf }}"
   when:
@@ -71,9 +75,12 @@
   notify: restart bind
 
 - name: manage local configuration file
+  become: yes
   template:
     src: named.conf.j2
     dest: "{{ bind_conf_local_path }}"
+    owner: "{{ bind_permissions.stat.pw_name }}"
+    group: "{{ bind_permissions.stat.gr_name }}"
   vars:
     conf: "{{ bind_conf_local | named_conf }}"
   when:
