@@ -3,10 +3,10 @@ bind_packages_state: present
 bind_conf_template: named.conf
 bind_service_status: started
 bind_service_enabled: true
-bind_interfaces_ip4:
+bind_interfaces_ipv4:
   - 127.0.0.1
   - '{{ ansible_default_ipv4.address }}'
-bind_interfaces_ip6:
+bind_interfaces_ipv6:
   - none
 bind_conf_options:
 bind_conf_local:
