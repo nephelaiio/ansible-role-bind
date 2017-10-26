@@ -54,7 +54,7 @@
     owner: "{{ bind_permissions.stat.pw_name }}"
     group: "{{ bind_permissions.stat.gr_name }}"
   vars:
-    conf: "{{ bind_conf_global | named_conf }}"
+    conf: "{{ bind_conf_global | default(bind_conf_global_default) | named_conf }}"
   when:
     - bind_conf_global is defined
     - bind_conf_global != None
@@ -68,10 +68,7 @@
     owner: "{{ bind_permissions.stat.pw_name }}"
     group: "{{ bind_permissions.stat.gr_name }}"
   vars:
-    conf: "{{ bind_conf_options | named_conf }}"
-  when:
-    - bind_conf_options is defined
-    - bind_conf_options != None
+    conf: "{{ bind_conf_options | default(bind_conf_options_default) | named_conf }}"
   notify: restart bind
 
 - name: manage local configuration file
