@@ -31,11 +31,11 @@ bind_conf_options_default:
     channel default_debug:
       file: '"data/named.run"'
       severity: dynamic
-bind_conf_global_default:
-  - 'include "{{ bind_conf_options_path }}"'
+bind_conf_global:
+  - "include \"{{ bind_conf_options_path }}\""
   - 'include "/etc/named.rfc1912.zones"'
   - 'zone "." IN':
       type: hint
       file: '"named.ca"'
-  - 'include "{{ bind_conf_local_path }}"'
+  - "include \"{{ bind_conf_local_path }}\""
   - 'include "/etc/named.root.key"'
