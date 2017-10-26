@@ -55,9 +55,6 @@
     group: "{{ bind_permissions.stat.gr_name }}"
   vars:
     conf: "{{ bind_conf_global | default(bind_conf_global_default) | named_conf }}"
-  when:
-    - bind_conf_global is defined
-    - bind_conf_global != None
   notify: restart bind
 
 - name: manage options configuration file
