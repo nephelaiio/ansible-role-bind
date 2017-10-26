@@ -12,7 +12,7 @@ bind_conf_options_default:
   options:
     listen-on: "{{ bind_interfaces_ipv4 }}"
     listen-on-v6: "{{ bind_interfaces_ipv6 }}"
-    directory: '"{{ bind_conf_root }}"'
+    directory: "\"{{ bind_conf_root }}\""
     dump-file: '"/var/named/data/cache_dump.db"'
     statistics-file: '"/var/named/data/named_stats.txt"'
     memstatistics-file: '"/var/named/data/named_mem_stats.txt"'
