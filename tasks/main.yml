@@ -79,7 +79,6 @@
     conf: "{{ bind_conf_local | named_conf }}"
   when:
     - bind_conf_local is defined
-    - bind_conf_local != None
   notify: restart bind
 
 - name: manage bind services
