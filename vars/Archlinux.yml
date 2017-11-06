@@ -1,5 +1,4 @@
 ---
-bind_conf_daemon_path:
 bind_conf_global_path_default: /etc/named.conf
 bind_conf_options_path_default: /etc/named.conf.options
 bind_conf_local_path_default: /etc/named.conf.local
