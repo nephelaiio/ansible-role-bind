@@ -1,6 +1,7 @@
 ---
 bind_packages_state: present
 bind_conf_template: named.conf.j2
+bind_service_name:
 bind_service_status: started
 bind_service_enabled: true
 bind_interfaces_ipv4:
@@ -11,6 +12,10 @@ bind_interfaces_ipv6:
 bind_conf_daemon_path:
 bind_conf_options:
 bind_conf_local:
+bind_conf_local_path:
+bind_conf_daemon_path:
+bind_conf_global_path:
+bind_conf_options_path:
 bind_forwarders:
   - 8.8.8.8
   - 8.8.4.4
