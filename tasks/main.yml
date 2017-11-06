@@ -13,7 +13,7 @@
   package:
     name: "{{ item }}"
     state: "{{ bind_packages_state }}"
-  with_items: "{{ bind_packages | bind_packages_default }}"
+  with_items: "{{ bind_packages | default(bind_packages_default) }}"
 
 - name: configure daemon options
   become: yes
