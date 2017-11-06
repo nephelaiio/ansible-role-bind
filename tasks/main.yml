@@ -13,24 +13,26 @@
   package:
     name: "{{ item }}"
     state: "{{ bind_packages_state }}"
-  with_items: "{{ bind_packages }}"
+  with_items: "{{ bind_packages | bind_packages_default }}"
 
 - name: configure daemon options
   become: yes
   lineinfile:
     regexp: '^OPTIONS='
     line: "OPTIONS=\"{{ bind_options }}\""
-    dest: "{{ bind_conf_daemon_path }}"
+    dest: "{{ bind_conf_daemon_path | default(bind_conf_daemon_path_default) }}"
     insertafter: EOF
   when:
     - bind_conf_daemon_path != None
     - bind_conf_daemon_path != ''
+    - bind_conf_daemon_path_default != None
+    - bind_conf_daemon_path_default != ''
   notify: restart bind
 
 - name: detect configuration permissions
   become: yes
   stat:
-    path: "{{ bind_conf_global_path }}"
+    path: "{{ bind_conf_global_path | default(bind_conf_global_path_default) }}"
   register: bind_permissions
 
 - name: initialize configuration files
@@ -42,15 +44,15 @@
     owner: "{{ bind_permissions.stat.pw_name }}"
     group: "{{ bind_permissions.stat.gr_name }}"
   with_items:
-    - "{{ bind_conf_global_path }}"
-    - "{{ bind_conf_options_path }}"
-    - "{{ bind_conf_local_path }}"
+    - "{{ bind_conf_global_path | default(bind_conf_global_path_default) }}"
+    - "{{ bind_conf_options_path | default(bind_conf_options_path_default) }}"
+    - "{{ bind_conf_local_path | default(bind_conf_local_path) }}"
 
 - name: manage global configuration file
   become: yes
   template:
     src: named.conf.j2
-    dest: "{{ bind_conf_global_path }}"
+    dest: "{{ bind_conf_global_path | default(bind_conf_global_path_default) }}"
     owner: "{{ bind_permissions.stat.pw_name }}"
     group: "{{ bind_permissions.stat.gr_name }}"
   vars:
@@ -60,8 +62,8 @@
 - name: manage options configuration file
   become: yes
   template:
-    src: named.conf.j2
-    dest: "{{ bind_conf_options_path }}"
+    src: "{{ bind_conf_template }}"
+    dest: "{{ bind_conf_options_path | default(bind_conf_options_path) }}"
     owner: "{{ bind_permissions.stat.pw_name }}"
     group: "{{ bind_permissions.stat.gr_name }}"
   vars:
@@ -72,7 +74,7 @@
   become: yes
   template:
     src: named.conf.j2
-    dest: "{{ bind_conf_local_path }}"
+    dest: "{{ bind_conf_local_path | default(bind_conf_local_path) }}"
     owner: "{{ bind_permissions.stat.pw_name }}"
     group: "{{ bind_permissions.stat.gr_name }}"
   vars:
@@ -84,6 +86,6 @@
 - name: manage bind services
   become: yes
   service:
-    name: "{{ bind_service_name }}"
+    name: "{{ bind_service_name | default(bind_service_name_default) }}"
     state: "{{ bind_service_status }}"
     enabled: "{{ bind_service_enabled }}"

@@ -1,11 +1,11 @@
 ---
 bind_conf_daemon_path:
-bind_conf_global_path: /etc/named.conf
-bind_conf_options_path: /etc/named.conf.options
-bind_conf_local_path: /etc/named.conf.local
+bind_conf_global_path_default: /etc/named.conf
+bind_conf_options_path_default: /etc/named.conf.options
+bind_conf_local_path_default: /etc/named.conf.local
 
-bind_packages: bind
-bind_service_name: named
+bind_packages_default: bind
+bind_service_name_default: named
 bind_options:
 bind_conf_root: /var/named
 bind_conf_options_default:

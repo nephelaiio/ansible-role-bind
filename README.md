@@ -5,6 +5,20 @@
 
 An [ansible role](https://galaxy.ansible.com/nephelaiio/bind) to install and configure bind
 
+## Variables
+
+The following variables allow you to override the state of the bind service
+Use ```bind_service_status``` to override the default runtime state of the service
+Use ```bind_service_enabled``` to override the default startup state of the service
+
+The following variables allow you to override the default configuration options
+Use ```bind_interfaces_ipv4``` and ```bind_interfaces_ipv6``` to override the default interfaces (Global default: [localhost, ansible_default_ipv4.address])bind will listen on
+Use ```bind_forwarders``` to override forwarders for the default configuration (Global default: [8.8.8.8, 8.8.4.4])
+Use ```bind_packages``` to override the package name for bind (Ubuntu default: bind9)
+Use ```bind_conf_options``` to override settings in ```bind_conf_options_path``` (Debian default: /etc/bind/named.conf.options) file
+Use ```bind_conf_local``` to override settings in ```bind_conf_local_path``` (Debian default: /etc/bind/named.conf.local) file
+Use ```bind_conf_template``` to provide raw configuration for bind; this is mutually exclusive with all other configuration options
+
 ## Example Playbook
 
 ```

@@ -1,6 +1,6 @@
 ---
 bind_packages_state: present
-bind_conf_template: named.conf
+bind_conf_template: named.conf.j2
 bind_service_status: started
 bind_service_enabled: true
 bind_interfaces_ipv4:
