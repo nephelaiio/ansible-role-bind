@@ -35,6 +35,9 @@
     path: "{{ bind_conf_global_path | default(bind_conf_global_path_default) }}"
   register: bind_permissions
 
+- debug:
+    var: bind_permissions
+
 - name: initialize configuration files
   become: yes
   copy:
