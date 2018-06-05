@@ -9,14 +9,12 @@
       skip: true
 
 - name: install bind packages
-  become: yes
   package:
     name: "{{ item }}"
     state: "{{ bind_packages_state }}"
   with_items: "{{ bind_packages | default(bind_packages_default) }}"
 
 - name: configure daemon options
-  become: yes
   lineinfile:
     regexp: '^OPTIONS='
     line: "OPTIONS=\"{{ bind_options }}\""
@@ -30,7 +28,6 @@
   notify: restart bind
 
 - name: detect configuration permissions
-  become: yes
   stat:
     path: "{{ bind_conf_global_path | default(bind_conf_global_path_default) }}"
   register: bind_permissions
@@ -39,7 +36,6 @@
     var: bind_permissions
 
 - name: initialize configuration files
-  become: yes
   copy:
     dest: "{{ item }}"
     content: ''
@@ -52,7 +48,6 @@
     - "{{ bind_conf_local_path | default(bind_conf_local_path) }}"
 
 - name: manage global configuration file
-  become: yes
   template:
     src: named.conf.j2
     dest: "{{ bind_conf_global_path | default(bind_conf_global_path_default) }}"
@@ -63,7 +58,6 @@
   notify: restart bind
 
 - name: manage options configuration file
-  become: yes
   template:
     src: "{{ bind_conf_template }}"
     dest: "{{ bind_conf_options_path | default(bind_conf_options_path) }}"
@@ -74,7 +68,6 @@
   notify: restart bind
 
 - name: manage local configuration file
-  become: yes
   template:
     src: named.conf.j2
     dest: "{{ bind_conf_local_path | default(bind_conf_local_path) }}"
@@ -87,7 +80,6 @@
   notify: restart bind
 
 - name: manage bind services
-  become: yes
   service:
     name: "{{ bind_service_name | default(bind_service_name_default) }}"
     state: "{{ bind_service_status }}"
