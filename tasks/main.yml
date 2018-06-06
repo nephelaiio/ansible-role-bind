@@ -32,13 +32,16 @@
     path: "{{ bind_conf_global_path | default(bind_conf_global_path_default) }}"
   register: bind_permissions
 
+- debug:
+    var: bind_permissions
+
 - name: initialize configuration files
   copy:
     dest: "{{ item }}"
     content: ''
     force: no
-    owner: "{{ bind_permissions.stat.pw_name }}"
-    group: "{{ bind_permissions.stat.gr_name }}"
+    owner: "{{ bind_permissions.stat.pw_name | default('root') }}"
+    group: "{{ bind_permissions.stat.gr_name | default('root') }}"
   with_items:
     - "{{ bind_conf_global_path | default(bind_conf_global_path_default) }}"
     - "{{ bind_conf_options_path | default(bind_conf_options_path_default) }}"
@@ -48,8 +51,8 @@
   template:
     src: named.conf.j2
     dest: "{{ bind_conf_global_path | default(bind_conf_global_path_default) }}"
-    owner: "{{ bind_permissions.stat.pw_name }}"
-    group: "{{ bind_permissions.stat.gr_name }}"
+    owner: "{{ bind_permissions.stat.pw_name | default('root') }}"
+    group: "{{ bind_permissions.stat.gr_name | default('root') }}"
   vars:
     conf: "{{ bind_conf_global | default(bind_conf_global_default) | named_conf }}"
   notify: restart bind
@@ -58,8 +61,8 @@
   template:
     src: "{{ bind_conf_template }}"
     dest: "{{ bind_conf_options_path | default(bind_conf_options_path) }}"
-    owner: "{{ bind_permissions.stat.pw_name }}"
-    group: "{{ bind_permissions.stat.gr_name }}"
+    owner: "{{ bind_permissions.stat.pw_name | default('root') }}"
+    group: "{{ bind_permissions.stat.gr_name | default('root') }}"
   vars:
     conf: "{{ bind_conf_options | default(bind_conf_options_default) | named_conf }}"
   notify: restart bind
@@ -68,8 +71,8 @@
   template:
     src: named.conf.j2
     dest: "{{ bind_conf_local_path | default(bind_conf_local_path) }}"
-    owner: "{{ bind_permissions.stat.pw_name }}"
-    group: "{{ bind_permissions.stat.gr_name }}"
+    owner: "{{ bind_permissions.stat.pw_name | default('root') }}"
+    group: "{{ bind_permissions.stat.gr_name | default('root') }}"
   vars:
     conf: "{{ bind_conf_local | named_conf }}"
   when:
