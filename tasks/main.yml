@@ -6,7 +6,6 @@
         - "vars/{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
         - "vars/{{ ansible_distribution }}.yml"
         - "vars/{{ ansible_os_family }}.yml"
-      skip: true
 
 - name: install bind packages
   package:
@@ -14,26 +13,38 @@
     state: "{{ bind_packages_state }}"
   with_items: "{{ bind_packages | default(bind_packages_default) }}"
 
+- name: register configuration file locations
+  set_fact:
+    conf_global_path: "{{ bind_conf_global_path | default(bind_conf_global_path_default) }}"
+    conf_options_path: "{{ bind_conf_options_path | default(bind_conf_options_path_default) }}"
+    conf_local_path: "{{ bind_conf_local_path | default(bind_conf_local_path_default) }}"
+    conf_daemon_path: "{{ bind_conf_daemon_path | default(bind_conf_daemon_path_default) }}"
+
 - name: configure daemon options
   lineinfile:
     regexp: '^OPTIONS='
     line: "OPTIONS=\"{{ bind_options }}\""
-    dest: "{{ bind_conf_daemon_path | default(bind_conf_daemon_path_default) }}"
+    dest: "{{ conf_daemon_path }}"
     insertafter: EOF
   when:
-    - bind_conf_daemon_path != None
-    - bind_conf_daemon_path != ''
-    - bind_conf_daemon_path_default != None
-    - bind_conf_daemon_path_default != ''
+    - conf_daemon_path != ''
   notify: restart bind
 
 - name: detect configuration permissions
   stat:
-    path: "{{ bind_conf_global_path | default(bind_conf_global_path_default) }}"
+    path: "{{ conf_global_path }}"
   register: bind_permissions
 
-- debug:
-    var: bind_permissions
+- name: create configuration directories
+  file:
+    state: directory
+    path: "{{ item }}"
+    owner: "{{ bind_permissions.stat.pw_name | default('root') }}"
+    group: "{{ bind_permissions.stat.gr_name | default('root') }}"
+  with_items:
+    - "{{ conf_global_path | dirname }}"
+    - "{{ conf_options_path | dirname }}"
+    - "{{ conf_local_path | dirname }}"
 
 - name: initialize configuration files
   copy:
@@ -43,14 +54,14 @@
     owner: "{{ bind_permissions.stat.pw_name | default('root') }}"
     group: "{{ bind_permissions.stat.gr_name | default('root') }}"
   with_items:
-    - "{{ bind_conf_global_path | default(bind_conf_global_path_default) }}"
-    - "{{ bind_conf_options_path | default(bind_conf_options_path_default) }}"
-    - "{{ bind_conf_local_path | default(bind_conf_local_path) }}"
+    - "{{ conf_global_path }}"
+    - "{{ conf_options_path }}"
+    - "{{ conf_local_path }}"
 
 - name: manage global configuration file
   template:
     src: named.conf.j2
-    dest: "{{ bind_conf_global_path | default(bind_conf_global_path_default) }}"
+    dest: "{{ conf_global_path }}"
     owner: "{{ bind_permissions.stat.pw_name | default('root') }}"
     group: "{{ bind_permissions.stat.gr_name | default('root') }}"
   vars:
@@ -60,7 +71,7 @@
 - name: manage options configuration file
   template:
     src: "{{ bind_conf_template }}"
-    dest: "{{ bind_conf_options_path | default(bind_conf_options_path) }}"
+    dest: "{{ conf_options_path }}"
     owner: "{{ bind_permissions.stat.pw_name | default('root') }}"
     group: "{{ bind_permissions.stat.gr_name | default('root') }}"
   vars:
@@ -70,7 +81,7 @@
 - name: manage local configuration file
   template:
     src: named.conf.j2
-    dest: "{{ bind_conf_local_path | default(bind_conf_local_path) }}"
+    dest: "{{ conf_local_path }}"
     owner: "{{ bind_permissions.stat.pw_name | default('root') }}"
     group: "{{ bind_permissions.stat.gr_name | default('root') }}"
   vars:

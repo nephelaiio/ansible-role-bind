@@ -1,4 +1,5 @@
 ---
+bind_conf_daemon_path_default: 
 bind_conf_global_path_default: /etc/named.conf
 bind_conf_options_path_default: /etc/named.conf.options
 bind_conf_local_path_default: /etc/named.conf.local
@@ -18,7 +19,7 @@ bind_conf_options_default:
     dnssec-validation: 'no'
     auth-nxdomain: 'no'
 bind_conf_global_default:
-  - 'include "{{ bind_conf_options_path }}"'
+  - 'include "{{ bind_conf_options_path | default(bind_conf_options_path_default) }}"'
   - 'zone "localhost" IN':
       - type: master
       - file: '"localhost.zone"'

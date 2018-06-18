@@ -32,10 +32,10 @@ bind_conf_options_default:
       file: '"data/named.run"'
       severity: dynamic
 bind_conf_global:
-  - "include \"{{ bind_conf_options_path }}\""
+  - "include \"{{ bind_conf_options_path | default(bind_conf_options_path_default) }}\""
   - 'include "/etc/named.rfc1912.zones"'
   - 'zone "." IN':
       type: hint
       file: '"named.ca"'
-  - "include \"{{ bind_conf_local_path }}\""
+  - "include \"{{ bind_conf_local_path | default(bind_conf_local_path_default) }}\""
   - 'include "/etc/named.root.key"'

@@ -12,9 +12,3 @@ bind_conf_options: None
 bind_forwarders:
   - 8.8.8.8
   - 8.8.4.4
-bind_service_name:
-bind_conf_local:
-bind_conf_local_path:
-bind_conf_daemon_path:
-bind_conf_global_path:
-bind_conf_options_path:

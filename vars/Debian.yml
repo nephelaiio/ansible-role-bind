@@ -20,6 +20,6 @@ bind_conf_options_default:
     dnssec-validation: 'no'
     auth-nxdomain: 'no'
 bind_conf_global_default:
-  - 'include "{{ bind_conf_options_path }}"'
-  - 'include "{{ bind_conf_local_path }}"'
+  - 'include "{{ bind_conf_options_path | default(bind_conf_options_path_default) }}"'
+  - 'include "{{ bind_conf_local_path | default(bind_conf_local_path_default) }}"'
   - 'include "/etc/bind/named.conf.default-zones"'
