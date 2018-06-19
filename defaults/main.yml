@@ -8,7 +8,6 @@ bind_interfaces_ipv4:
   - "{{ ansible_default_ipv4.address }}"
 bind_interfaces_ipv6:
   - none
-bind_conf_options: None
 bind_forwarders:
   - 8.8.8.8
   - 8.8.4.4
