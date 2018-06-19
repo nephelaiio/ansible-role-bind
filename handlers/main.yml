@@ -2,5 +2,5 @@
 - name: restart bind
   become: yes
   service:
-    name: "{{ bind_service_name }}"
+    name: "{{ bind_service_name | default(bind_service_name_default) }}"
     state: restarted
