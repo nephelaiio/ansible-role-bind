@@ -12,8 +12,14 @@ platforms:
     command: /usr/sbin/init
     volume_mounts:
       - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
-  - name: ubuntu
+  - name: xenial
     image: solita/ubuntu-systemd:latest
+    privileged: True
+    command: /sbin/init
+    volume_mounts:
+      - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+  - name: bionic
+    image: solita/ubuntu-systemd:bionic
     privileged: True
     command: /sbin/init
     volume_mounts:
@@ -25,7 +31,7 @@ platforms:
     volume_mounts:
       - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
   - name: arch
-    image: base/archlinux:latest
+    image: archlinux/base:latest
     privileged: True
     command: /usr/sbin/init
     volume_mounts:
