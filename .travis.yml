@@ -13,10 +13,7 @@ install:
 
 script:
   - pytest test
-  - molecule test
-
-env:
-  MOLECULE_DEBUG: true
+  - molecule test --debug
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
