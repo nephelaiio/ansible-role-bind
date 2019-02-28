@@ -15,5 +15,8 @@ script:
   - pytest test
   - molecule test
 
+env:
+  MOLECULE_DEBUG: true
+
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
