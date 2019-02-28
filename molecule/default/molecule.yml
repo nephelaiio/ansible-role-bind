@@ -29,13 +29,13 @@ platforms:
   - name: debian
     image: "geerlingguy/docker-debian9-ansible:latest"
     privileged: True
-    command: /sbin/init
+    command: /lib/systemd/systemd
     volume_mounts:
       - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
   - name: arch
     image: archlinux/base:latest
     privileged: True
-    command: /usr/sbin/init
+    command: /usr/lib/systemd/systemd
     volume_mounts:
       - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
 provisioner:
