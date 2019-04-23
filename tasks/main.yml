@@ -27,7 +27,7 @@
     dest: "{{ conf_daemon_path }}"
     insertafter: EOF
   when:
-    - conf_daemon_path != ''
+    - conf_daemon_path | length > 0
   notify: restart bind
 
 - name: detect configuration permissions
