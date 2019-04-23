@@ -4,12 +4,12 @@ def named_conf(value, key='', indent=0, step=2):
     if type(value) is dict:
         if section.strip() != '':
             recurse_print = [named_conf(v, k, indent + step)
-                             for (k, v) in value.iteritems()]
+                             for (k, v) in value.items()]
             members = "\n".join(recurse_print)
             conf = "{0}{{\n{1}\n{2}}};".format(section, members, ' ' * indent)
         else:
             conf = "\n".join([named_conf(v, k, indent)
-                              for (k, v) in value.iteritems()])
+                              for (k, v) in value.items()])
     elif type(value) is list:
         if key.strip() != '':
             members = "\n".join([named_conf(v, '', indent + step)
@@ -24,11 +24,11 @@ def named_conf(value, key='', indent=0, step=2):
 
 
 def with_key(value, key):
-    return(dict([[k, v] for (k, v) in value.iteritems() if k == key]))
+    return(dict([[k, v] for (k, v) in value.items() if k == key]))
 
 
 def without_key(value, key):
-    return(dict([[k, v] for (k, v) in value.iteritems() if k != key]))
+    return(dict([[k, v] for (k, v) in value.items() if k != key]))
 
 
 class FilterModule(object):
