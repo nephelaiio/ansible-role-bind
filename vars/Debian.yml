@@ -6,7 +6,9 @@ bind_conf_local_path_default: /etc/bind/named.conf.local
 bind_conf_rfc1918_path_default: /etc/bind/zones.rfc1918
 bind_conf_hints_path_default: /etc/bind/db.root
 
-bind_packages_default: bind9
+bind_packages_default:
+  - bind9
+  - dnsutils
 bind_service_name_default: bind9
 bind_options: "-u bind -4"
 bind_conf_root: /var/cache/bind
