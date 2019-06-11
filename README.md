@@ -33,6 +33,8 @@ Use ```bind_conf_template``` to provide raw configuration for bind; this is mutu
 Please make sure your environment has [docker](https://www.docker.com) installed in order to run role validation tests. Additional python dependencies are listed in the [requirements file](/requirements.txt)
 
 Role is tested against the following distributions (docker images):
+
+  * Ubuntu Bionic
   * Ubuntu Xenial
   * CentOS 7
   * Debian Stretch
