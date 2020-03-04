@@ -7,6 +7,27 @@
         - "vars/{{ ansible_distribution }}.yml"
         - "vars/{{ ansible_os_family }}.yml"
 
+- name: gather service facts
+  service_facts:
+
+- block:
+
+    - name: disable systemd-resolved
+      systemd:
+        name: systemd-resolved
+        state: stopped
+        enabled: no
+        masked: yes
+
+    - name: disable systemd-resolved resolv.conf override
+      copy:
+        src: /run/systemd/resolve/resolv.conf
+        dest: /etc/resolv.conf
+        local_follow: no
+        remote_src: yes
+
+  when: "'systemd-resolved.service' in ansible_facts.services"
+
 - name: install bind packages
   package:
     name: "{{ item }}"
