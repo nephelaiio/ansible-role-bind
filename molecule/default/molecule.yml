@@ -1,13 +1,14 @@
 ---
 dependency:
   name: galaxy
+lint: |
+  yamllint .
+  ansible-lint .
 driver:
   name: docker
-lint:
-  name: yamllint
 platforms:
-  - name: centos7
-    image: centos:7
+  - name: centos8
+    image: centos:8
     privileged: True
     command: /usr/sbin/init
     volume_mounts:
@@ -32,13 +33,7 @@ platforms:
       - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
 provisioner:
   name: ansible
-  lint:
-    name: ansible-lint
   env:
     ANSIBLE_FILTER_PLUGINS: filter_plugins
-scenario:
-  name: default
 verifier:
   name: testinfra
-  lint:
-    name: flake8
