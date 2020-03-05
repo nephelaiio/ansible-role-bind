@@ -24,7 +24,6 @@
       copy:
         src: /run/systemd/resolve/resolv.conf
         dest: /etc/resolv.conf
-        local_follow: no
         remote_src: yes
       when: systemd_resolve_disable is changed
 
