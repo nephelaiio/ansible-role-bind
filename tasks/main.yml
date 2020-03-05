@@ -18,6 +18,7 @@
         state: stopped
         enabled: no
         masked: yes
+      register: systemd_resolve_disable
 
     - name: disable systemd-resolved resolv.conf override
       copy:
@@ -25,14 +26,23 @@
         dest: /etc/resolv.conf
         local_follow: no
         remote_src: yes
+      when: systemd_resolve_disable is changed
 
   when: "'systemd-resolved.service' in ansible_facts.services"
 
-- name: install bind packages
-  package:
-    name: "{{ item }}"
+- name: install bind yum packages
+  yum:
+    name: "{{ bind_packages | default(bind_packages_default) }}"
     state: "{{ bind_packages_state }}"
-  with_items: "{{ bind_packages | default(bind_packages_default) }}"
+    update_cache: yes
+  when: ansible_os_family | lower == 'redhat'
+
+- name: install bind packages
+  apt:
+    name: "{{ bind_packages | default(bind_packages_default) }}"
+    state: "{{ bind_packages_state }}"
+    update_cache: yes
+  when: ansible_os_family | lower == 'debian'
 
 - name: register configuration file locations
   set_fact:
