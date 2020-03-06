@@ -22,7 +22,7 @@
 
     - name: disable systemd-resolved resolv.conf override
       file:
-        state: linkt
+        state: link
         src: /run/systemd/resolve/resolv.conf
         dest: /etc/resolv.conf
       when: systemd_resolve_disable is changed
