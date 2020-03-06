@@ -21,10 +21,10 @@
       register: systemd_resolve_disable
 
     - name: disable systemd-resolved resolv.conf override
-      copy:
+      file:
+        state: linkt
         src: /run/systemd/resolve/resolv.conf
         dest: /etc/resolv.conf
-        remote_src: yes
       when: systemd_resolve_disable is changed
 
   when: "'systemd-resolved.service' in ansible_facts.services"
