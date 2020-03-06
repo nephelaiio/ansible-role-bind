@@ -32,7 +32,6 @@
             content: "{{ resolv['content'] | b64decode }}"
             dest: /etc/resolv.conf
             remote_src: yes
-          skip_errors: yes
 
       when:
         - systemd_resolve_disable is changed
