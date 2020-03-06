@@ -20,11 +20,17 @@
         masked: yes
       register: systemd_resolve_disable
 
-    - name: disable systemd-resolved resolv.conf override
-      file:
-        state: link
+    - name: slurp resolv.conf settings
+      slurp:
         src: /run/systemd/resolve/resolv.conf
+      register: resolv
+      when: systemd_resolve_disable is changed
+
+    - name: disable systemd-resolved resolv.conf override
+      copy:
+        content: "{{ resolv['content'] | b64decode }}"
         dest: /etc/resolv.conf
+        remote_src: yes
       when: systemd_resolve_disable is changed
 
   when: "'systemd-resolved.service' in ansible_facts.services"
