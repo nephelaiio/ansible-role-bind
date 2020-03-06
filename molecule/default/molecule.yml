@@ -23,6 +23,10 @@ platforms:
     pre_build_image: true
 provisioner:
   name: ansible
+  inventory:
+    group_vars:
+      all:
+        bind_disable_systemd_resolved: no
   env:
     ANSIBLE_FILTER_PLUGINS: filter_plugins
 verifier:

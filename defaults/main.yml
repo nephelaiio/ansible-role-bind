@@ -11,3 +11,4 @@ bind_interfaces_ipv6:
 bind_forwarders:
   - 8.8.8.8
   - 8.8.4.4
+bind_disable_systemd_resolved: yes

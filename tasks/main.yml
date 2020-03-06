@@ -20,20 +20,26 @@
         masked: yes
       register: systemd_resolve_disable
 
-    - name: slurp resolv.conf settings
-      slurp:
-        src: /run/systemd/resolve/resolv.conf
-      register: resolv
-      when: systemd_resolve_disable is changed
+    - block:
 
-    - name: disable systemd-resolved resolv.conf override
-      copy:
-        content: "{{ resolv['content'] | b64decode }}"
-        dest: /etc/resolv.conf
-        remote_src: yes
-      when: systemd_resolve_disable is changed
+        - name: slurp resolv.conf settings
+          slurp:
+            src: /run/systemd/resolve/resolv.conf
+          register: resolv
 
-  when: "'systemd-resolved.service' in ansible_facts.services"
+        - name: disable systemd-resolved resolv.conf override
+          copy:
+            content: "{{ resolv['content'] | b64decode }}"
+            dest: /etc/resolv.conf
+            remote_src: yes
+          skip_errors: yes
+
+      when:
+        - systemd_resolve_disable is changed
+
+  when:
+    - bind_disable_systemd_resolved | bool
+    - "'systemd-resolved.service' in ansible_facts.services"
 
 - name: install bind yum packages
   yum:
